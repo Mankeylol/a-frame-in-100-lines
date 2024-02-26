@@ -18,13 +18,14 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   if (isValid) {
     accountAddress = message.interactor.verified_accounts[0];
+    console.log(accountAddress)
   }
 
   if (message?.input) {
     text = message.input;
+    console.log(message)
+     await uploadToMongo(body)
   }
-
-  uploadToMongo(body)
 
   return new NextResponse(
     getFrameHtmlResponse({
@@ -58,6 +59,7 @@ async function uploadToMongo (body: any) {
       };
       const options = { upsert: true };
       const result = await collection.updateOne(update, options);
+      console.log(result)
 
     } catch (error) {
         
