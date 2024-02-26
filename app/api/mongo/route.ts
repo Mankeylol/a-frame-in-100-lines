@@ -15,17 +15,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   return new NextResponse(
     getFrameHtmlResponse({
-      buttons: [
-        {
-          label: `Sign up`,
-        },
-      ],
       image: {
-        src: `${NEXT_PUBLIC_URL}/enter-email.png`,
-        aspectRatio: '1:1',
-      },
-      input: {
-        text: 'Enter Email',
+        src: `${NEXT_PUBLIC_URL}/thank-you.png`
+        ,aspectRatio: '1:1'
       },
       postUrl: `${NEXT_PUBLIC_URL}/api/mongo`,
     }),
