@@ -23,7 +23,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   if (message?.input) {
     text = message.input;
-    await uploadToMongo(text)
+    await uploadToMongo(text, accountAddress)
     console.log(text)
   }
 
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
 export const dynamic = 'force-dynamic';
 
-async function uploadToMongo (text: any) {
+async function uploadToMongo (text: any, accountAddress: any) {
     try {
         const client = new MongoClient(mongoURI);
     await client.connect();
@@ -52,14 +52,13 @@ async function uploadToMongo (text: any) {
     const db = client.db('Event');
     const collection = db.collection('signUps');
 
-    const update = {
-        $set: {
-          email: text,
-        }
-      };
-      const options = { upsert: true };
-      const result = await collection.updateOne(update, options);
-      console.log("the result"+result)
+    const documentToInsert = {
+      email: text,
+      accountAddress: accountAddress,
+  };
+
+  const result = await collection.insertOne(documentToInsert);
+        console.log("the result", result);
 
     } catch (error) {
         console.log(error)
