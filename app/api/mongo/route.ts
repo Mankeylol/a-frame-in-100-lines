@@ -2,16 +2,29 @@ import { FrameRequest, getFrameMessage, getFrameHtmlResponse } from '@coinbase/o
 import { NextRequest, NextResponse } from 'next/server';
 import { NEXT_PUBLIC_URL } from '../../config';
 import dotenv from 'dotenv';
+import { MongoClient } from 'mongodb';
 
 dotenv.config();
 
 const neynarApi = process.env.NEYNAR_KEY
+const mongoURI = process.env.MONGO_URI || ''
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   let accountAddress: string | undefined = '';
   let text: string | undefined = '';
 
   const body: FrameRequest = await req.json();
+  const { isValid, message } = await getFrameMessage(body, { neynarApiKey: neynarApi });
+
+  if (isValid) {
+    accountAddress = message.interactor.verified_accounts[0];
+  }
+
+  if (message?.input) {
+    text = message.input;
+  }
+
+  uploadToMongo(body)
 
   return new NextResponse(
     getFrameHtmlResponse({
@@ -29,3 +42,24 @@ export async function POST(req: NextRequest): Promise<Response> {
 }
 
 export const dynamic = 'force-dynamic';
+
+async function uploadToMongo (body: any) {
+    try {
+        const client = new MongoClient(mongoURI);
+    await client.connect();
+
+    const db = client.db('Event');
+    const collection = db.collection('signUps');
+
+    const update = {
+        $set: {
+          email: body.message.input,
+        }
+      };
+      const options = { upsert: true };
+      const result = await collection.updateOne(update, options);
+
+    } catch (error) {
+        
+    }
+}
