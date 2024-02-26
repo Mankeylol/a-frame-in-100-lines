@@ -14,6 +14,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   let text: string | undefined = '';
 
   const body: FrameRequest = await req.json();
+  await uploadToMongo(body)
   const { isValid, message } = await getFrameMessage(body, { neynarApiKey: neynarApi });
 
   if (isValid) {
@@ -23,8 +24,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   if (message?.input) {
     text = message.input;
-    console.log("message"+message)
-     await uploadToMongo(body)
+    console.log(message)
   }
 
   return new NextResponse(
@@ -62,6 +62,6 @@ async function uploadToMongo (body: any) {
       console.log("the result"+result)
 
     } catch (error) {
-        
+        console.log(error)
     }
 }
