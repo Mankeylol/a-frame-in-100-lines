@@ -23,7 +23,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   if (message?.input) {
     text = message.input;
-    console.log(message)
+    console.log("message"+message)
      await uploadToMongo(body)
   }
 
@@ -59,7 +59,7 @@ async function uploadToMongo (body: any) {
       };
       const options = { upsert: true };
       const result = await collection.updateOne(update, options);
-      console.log(result)
+      console.log("the result"+result)
 
     } catch (error) {
         
