@@ -23,8 +23,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   if (message?.input) {
     text = message.input;
-    await uploadToMongo(body)
-    console.log(message)
+    await uploadToMongo(text)
+    console.log(text)
   }
 
   return new NextResponse(
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
 export const dynamic = 'force-dynamic';
 
-async function uploadToMongo (body: any) {
+async function uploadToMongo (text: any) {
     try {
         const client = new MongoClient(mongoURI);
     await client.connect();
@@ -54,7 +54,7 @@ async function uploadToMongo (body: any) {
 
     const update = {
         $set: {
-          email: body.message.input,
+          email: text,
         }
       };
       const options = { upsert: true };
