@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
 
 dotenv.config();
-
 const neynarApi = process.env.NEYNAR_KEY
 const mongoURI = process.env.MONGO_URI || ''
 
