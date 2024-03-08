@@ -24,13 +24,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     text = message.input;
     console.log(text)
   }
-  
 
   return new NextResponse(
     getFrameHtmlResponse({
       buttons: [
         {
-          label: `->`,
+          label: `Sign up`,
         },
       ],
       image: {
@@ -38,9 +37,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         aspectRatio: '1:1',
       },
       input: {
-        text: 'Enter Email',
+        text: 'Telegram handle',
       },
-      postUrl: `${NEXT_PUBLIC_URL}/api/telegram?`,
+      postUrl: `${NEXT_PUBLIC_URL}/api/mongo?email=${text}`,
     }),
   );
 }

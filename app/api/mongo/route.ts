@@ -10,6 +10,9 @@ const neynarApi = process.env.NEYNAR_KEY
 const mongoURI = process.env.MONGO_URI || ''
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
+  const { searchParams } = new URL(req.url);
+  const email = searchParams.get('email');
+  console.log(email)
   let accountAddress: string | undefined = '';
   let text: string | undefined = '';
 
@@ -23,7 +26,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   if (message?.input) {
     text = message.input;
-    await uploadToMongo(text, accountAddress)
+    await uploadToMongo(email, text, accountAddress)
     console.log(text)
   }
 
@@ -44,7 +47,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
 export const dynamic = 'force-dynamic';
 
-async function uploadToMongo (text: any, accountAddress: any) {
+async function uploadToMongo (email: any ,text: any, accountAddress: any) {
     try {
         const client = new MongoClient(mongoURI);
     await client.connect();
@@ -53,8 +56,10 @@ async function uploadToMongo (text: any, accountAddress: any) {
     const collection = db.collection('signUps');
 
     const documentToInsert = {
-      email: text,
+      email: email,
+      telegram: text,
       accountAddress: accountAddress,
+
   };
 
   const result = await collection.insertOne(documentToInsert);
