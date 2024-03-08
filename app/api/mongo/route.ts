@@ -32,7 +32,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   return new NextResponse(
     getFrameHtmlResponse({
       image: {
-        src: `${NEXT_PUBLIC_URL}/thank-you.png`
+        src: `${NEXT_PUBLIC_URL}/duh.jpg`
         ,aspectRatio: '1:1'
       },
       postUrl: `${NEXT_PUBLIC_URL}/api/mongo`,
